@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/qt/qml/SternGerlachSimulator">
+    <file alias="qmldir">C:/Users/vital/OneDrive - Simon Fraser University (1sfu)/Documents/3rd Year/PHYS 385/SternGerlachSimulator/SternGerlachSimulator/build/Desktop_Qt_6_8_0_llvm_mingw_64_bit-Debug/SternGerlachSimulator/qmldir</file>
+  </qresource>
+</RCC>
+
