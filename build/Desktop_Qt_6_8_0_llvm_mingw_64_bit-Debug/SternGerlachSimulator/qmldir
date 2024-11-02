@@ -2,4 +2,6 @@ module SternGerlachSimulator
 typeinfo appSternGerlachSimulator.qmltypes
 prefer :/qt/qml/SternGerlachSimulator/
 Main 1.0 Main.qml
+DragTile 1.0 tiles/DragTile.qml
+DropTile 1.0 tiles/DropTile.qml
 

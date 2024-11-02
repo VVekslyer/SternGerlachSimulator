@@ -1,3 +1,4 @@
+// main.cpp
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
@@ -12,6 +13,7 @@ int main(int argc, char *argv[])
         &app,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
+
     engine.loadFromModule("SternGerlachSimulator", "Main");
 
     return app.exec();

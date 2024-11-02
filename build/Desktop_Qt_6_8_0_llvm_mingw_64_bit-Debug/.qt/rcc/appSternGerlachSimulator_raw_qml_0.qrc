@@ -1,6 +1,9 @@
 <RCC>
   <qresource prefix="/qt/qml/SternGerlachSimulator/">
     <file alias="Main.qml">C:/Users/vital/OneDrive - Simon Fraser University (1sfu)/Documents/3rd Year/PHYS 385/SternGerlachSimulator/SternGerlachSimulator/Main.qml</file>
+    <file alias="tiles/tiles.qml">C:/Users/vital/OneDrive - Simon Fraser University (1sfu)/Documents/3rd Year/PHYS 385/SternGerlachSimulator/SternGerlachSimulator/tiles/tiles.qml</file>
+    <file alias="tiles/DragTile.qml">C:/Users/vital/OneDrive - Simon Fraser University (1sfu)/Documents/3rd Year/PHYS 385/SternGerlachSimulator/SternGerlachSimulator/tiles/DragTile.qml</file>
+    <file alias="tiles/DropTile.qml">C:/Users/vital/OneDrive - Simon Fraser University (1sfu)/Documents/3rd Year/PHYS 385/SternGerlachSimulator/SternGerlachSimulator/tiles/DropTile.qml</file>
   </qresource>
 </RCC>
 

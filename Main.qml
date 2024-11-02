@@ -1,8 +1,18 @@
+// Main.qml
 import QtQuick
+import QtQuick.Window
 
 Window {
-    width: 640
-    height: 480
+    id: mainWindow
+    width: 1280
+    height: 720
     visible: true
-    title: qsTr("PHYS385 - Stern-Gerlach Simulator")
+    title: qsTr("PHYS 385 - Stern-Gerlach Simulator")
+
+    // Correct way to include tiles.qml using Loader
+    Loader {
+        id: tilesLoader
+        anchors.fill: parent
+        source: "tiles/tiles.qml"
+    }
 }
