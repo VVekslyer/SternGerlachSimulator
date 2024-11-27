@@ -7,7 +7,7 @@ Window {
     width: 1280
     height: 720
     visible: true
-    title: qsTr("PHYS 385 - Stern-Gerlach Simulator")
+    title: qsTr("Stern-Gerlach Simulator")
 
     // Correct way to include tiles.qml using Loader
     Loader {

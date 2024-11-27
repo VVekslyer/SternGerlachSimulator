@@ -4,6 +4,8 @@
     <file alias="tiles/tiles.qml">C:/Users/vital/OneDrive - Simon Fraser University (1sfu)/Documents/3rd Year/PHYS 385/SternGerlachSimulator/SternGerlachSimulator/tiles/tiles.qml</file>
     <file alias="tiles/DragTile.qml">C:/Users/vital/OneDrive - Simon Fraser University (1sfu)/Documents/3rd Year/PHYS 385/SternGerlachSimulator/SternGerlachSimulator/tiles/DragTile.qml</file>
     <file alias="tiles/DropTile.qml">C:/Users/vital/OneDrive - Simon Fraser University (1sfu)/Documents/3rd Year/PHYS 385/SternGerlachSimulator/SternGerlachSimulator/tiles/DropTile.qml</file>
+    <file alias="tiles/DragTile_X.qml">C:/Users/vital/OneDrive - Simon Fraser University (1sfu)/Documents/3rd Year/PHYS 385/SternGerlachSimulator/SternGerlachSimulator/tiles/DragTile_X.qml</file>
+    <file alias="tiles/ConnectionLine.qml">C:/Users/vital/OneDrive - Simon Fraser University (1sfu)/Documents/3rd Year/PHYS 385/SternGerlachSimulator/SternGerlachSimulator/tiles/ConnectionLine.qml</file>
   </qresource>
 </RCC>
 

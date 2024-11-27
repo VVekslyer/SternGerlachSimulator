@@ -33,6 +33,20 @@ namespace _qt_qml_SternGerlachSimulator_tiles_DropTile_qml {
         reinterpret_cast<const QV4::CompiledData::Unit*>(&qmlData), &aotBuiltFunctions[0], nullptr
     };
 }
+namespace _qt_qml_SternGerlachSimulator_tiles_DragTile_X_qml { 
+    extern const unsigned char qmlData[];
+    extern const QQmlPrivate::AOTCompiledFunction aotBuiltFunctions[];
+    const QQmlPrivate::CachedQmlUnit unit = {
+        reinterpret_cast<const QV4::CompiledData::Unit*>(&qmlData), &aotBuiltFunctions[0], nullptr
+    };
+}
+namespace _qt_qml_SternGerlachSimulator_tiles_ConnectionLine_qml { 
+    extern const unsigned char qmlData[];
+    extern const QQmlPrivate::AOTCompiledFunction aotBuiltFunctions[];
+    const QQmlPrivate::CachedQmlUnit unit = {
+        reinterpret_cast<const QV4::CompiledData::Unit*>(&qmlData), &aotBuiltFunctions[0], nullptr
+    };
+}
 
 }
 namespace {
@@ -51,6 +65,8 @@ Registry::Registry() {
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/SternGerlachSimulator/tiles/tiles.qml"), &QmlCacheGeneratedCode::_qt_qml_SternGerlachSimulator_tiles_tiles_qml::unit);
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/SternGerlachSimulator/tiles/DragTile.qml"), &QmlCacheGeneratedCode::_qt_qml_SternGerlachSimulator_tiles_DragTile_qml::unit);
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/SternGerlachSimulator/tiles/DropTile.qml"), &QmlCacheGeneratedCode::_qt_qml_SternGerlachSimulator_tiles_DropTile_qml::unit);
+    resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/SternGerlachSimulator/tiles/DragTile_X.qml"), &QmlCacheGeneratedCode::_qt_qml_SternGerlachSimulator_tiles_DragTile_X_qml::unit);
+    resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/SternGerlachSimulator/tiles/ConnectionLine.qml"), &QmlCacheGeneratedCode::_qt_qml_SternGerlachSimulator_tiles_ConnectionLine_qml::unit);
     QQmlPrivate::RegisterQmlUnitCacheHook registration;
     registration.structVersion = 0;
     registration.lookupCachedQmlUnit = &lookupCachedUnit;

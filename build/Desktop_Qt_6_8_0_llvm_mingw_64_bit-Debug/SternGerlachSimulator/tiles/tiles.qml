@@ -21,10 +21,10 @@ Rectangle {
         width: parent.width - sourceColumn.width - 10
         height: parent.height - 10
         opacity: 0.5
-        columns: 6
+        columns: 10
 
         Repeater {
-            model: 36
+            model: 80
             delegate: DropTile {
                 colorKey: "any"
             }
@@ -43,19 +43,26 @@ Rectangle {
         width: 64
         spacing: -4
 
+        // Updated Repeater for red tiles
         Repeater {
-            model: 3
-            delegate: DragTile {
+            model: [0, 1, 2]  // Using an array as the model
+            delegate: DragTile_X {
                 colorKey: "red"
-                modelData: index
             }
         }
+
+        // Updated Repeater for blue tiles
         Repeater {
-            model: 3
+            model: [0, 1, 2]  // Using an array as the model
             delegate: DragTile {
                 colorKey: "blue"
-                modelData: index
             }
+        }
+
+        // New Repeater for ConnectionLine
+        Repeater {
+            model: [0, 1, 2]
+            delegate: ConnectionLine { }
         }
     }
 }
