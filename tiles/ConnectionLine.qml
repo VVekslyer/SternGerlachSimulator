@@ -32,8 +32,8 @@ Item {
 
             Drag.keys: [ "white" ]
             Drag.active: mouseArea.drag.active
-            Drag.hotSpot.x: 32
-            Drag.hotSpot.y: 32
+            // Drag.hotSpot.x: 32
+            // Drag.hotSpot.y: 32
 
             states: State {
                 when: mouseArea.drag.active

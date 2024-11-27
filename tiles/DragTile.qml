@@ -7,14 +7,14 @@ Item {
     required property string colorKey
     required property int modelData
 
-    width: 64
-    height: 64
+    width: 128  // Doubled
+    height: 128 // Doubled
 
     MouseArea {
         id: mouseArea
 
-        width: 72
-        height: 64
+        width: 144  // Doubled (72 * 2)
+        height: 128 // Doubled
         anchors.centerIn: parent
 
         drag.target: tile
@@ -24,39 +24,40 @@ Item {
         Rectangle {
             id: tile
 
-            width: 78
-            height: 64
+            width: 156  // Doubled (78 * 2)
+            height: 128 // Doubled
             anchors {
-                verticalCenter: parent.verticalCenter
-                horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.verticalCenter
+            horizontalCenter: parent.horizontalCenter
             }
+            transform: Translate { x: 39; y: 32 }  // Move rectangle right and down
 
             color: root.colorKey
 
             Drag.keys: [ root.colorKey ]
             Drag.active: mouseArea.drag.active
-            Drag.hotSpot.x: 32
-            Drag.hotSpot.y: 32
+            Drag.hotSpot.x: 64  // Adjusted for new center
+            Drag.hotSpot.y: 64  // Adjusted for new center
 
             Text {
-                anchors.fill: parent
-                color: "white"
-                font.pixelSize: 48
-                textFormat: Text.RichText
-                text: "SG<small>z</small>"
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+            anchors.fill: parent
+            color: "white"
+            font.pixelSize: 96  // Increased for larger tile
+            textFormat: Text.RichText
+            text: "SG<small>z</small>"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
             }
 
             states: State {
-                when: mouseArea.drag.active
-                AnchorChanges {
-                    target: tile
-                    anchors {
-                        verticalCenter: undefined
-                        horizontalCenter: undefined
-                    }
+            when: mouseArea.drag.active
+            AnchorChanges {
+                target: tile
+                anchors {
+                verticalCenter: undefined
+                horizontalCenter: undefined
                 }
+            }
             }
         }
     }
