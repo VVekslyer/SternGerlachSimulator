@@ -3,14 +3,37 @@ import QtQuick 2.15
 
 Rectangle {
     id: root
-
     width: 1280
     height: 720
     color: "black"
 
+    // Grid tracking array
+    property var gridArray: {
+        let arr = [];
+        for (let i = 0; i < 12; i++) {
+            arr[i] = [];
+            for (let j = 0; j < 12; j++) {
+                arr[i][j] = ".";
+            }
+        }
+        return arr;
+    }
+
+    // Print function
+    function printGrid() {
+        console.debug("\nGrid State:");
+        for (let i = 0; i < 12; i++) {
+            let row = "";
+            for (let j = 0; j < 12; j++) {
+                row += gridArray[i][j] + " ";
+            }
+            console.debug(row);
+        }
+        console.debug("---------------");
+    }
+
     Grid {
         id: destination
-
         anchors {
             left: sourceColumn.right
             right: parent.right
@@ -26,7 +49,52 @@ Rectangle {
         Repeater {
             model: 144   // Increased grid capacity
             delegate: DropTile {
+                id: dropTile
                 colorKey: "any"
+                property bool isDragActive: false
+                property var lastDragSource: null
+                
+                onEntered: {
+                    isDragActive = true;
+                    lastDragSource = drag.source;
+                    console.debug("Drag entered:", index);
+                }
+                
+                onExited: {
+                    console.debug("Exit detected, isDragActive:", isDragActive);
+                    if (isDragActive) {
+                        console.debug("lastDragSource:", lastDragSource);
+                        console.debug("lastDragSource parent:", lastDragSource ? lastDragSource.parent : null);
+                        console.debug("dropTile:", dropTile);
+
+                        let type = ".";
+                        // Simplify the drop check - parent changed check might be too strict
+                        if (lastDragSource) {
+                            if (drag.source.Drag.keys.indexOf("red") >= 0) type = "X";
+                            else if (drag.source.Drag.keys.indexOf("blue") >= 0) type = "Z";
+                            else if (drag.source.Drag.keys.indexOf("white") >= 0) type = "-";
+                            else if (drag.source.Drag.keys.indexOf("wall") >= 0) type = "|";
+
+                            // Clear previous position if it exists
+                            for (let i = 0; i < 12; i++) {
+                                for (let j = 0; j < 12; j++) {
+                                    if (gridArray[i][j] === type) {
+                                        gridArray[i][j] = ".";
+                                    }
+                                }
+                            }
+
+                            let gridX = Math.floor(index % 12);
+                            let gridY = Math.floor(index / 12);
+                            
+                            gridArray[gridY][gridX] = type;
+                            console.debug("Drop completed at:", gridX, gridY);
+                            printGrid();
+                        }
+                    }
+                    isDragActive = false;
+                    lastDragSource = null;
+                }
             }
         }
     }
