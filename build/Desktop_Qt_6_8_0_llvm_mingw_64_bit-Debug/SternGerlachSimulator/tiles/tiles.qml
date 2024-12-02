@@ -10,7 +10,7 @@ Rectangle {
 
     // Add property to receive state from Main.qml
     property string initialState: Window.window ? Window.window.selectedState : "+Z"
-    property int particleCount: Window.window ? Window.window.particleCount : 100  // Default 100
+    property int particleCount: tilesLoader.particleCount  // Update this
 
     SternGerlachSimulator {
         id: simulator

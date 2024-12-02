@@ -165,6 +165,7 @@ Window {
             Layout.fillWidth: true
             Layout.fillHeight: true
             source: "tiles/tiles.qml"
+            property int particleCount: particleCountSpinBox.value  // Add this
         }
 
         // Stats panel
