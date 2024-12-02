@@ -61,15 +61,16 @@ Item {
         }
 
         Rectangle {
-            // ... existing code ...
-
             Text {
                 anchors.centerIn: parent
                 text: {
                     let results = simulator.getResults();
-                    return results.throughputPercent.toFixed(1) + "%";
+                    return (results.throughputPercent).toFixed(1) + "%\n" +
+                           "↑:" + (results.upPercent).toFixed(1) + "%\n" +
+                           "↓:" + (results.downPercent).toFixed(1) + "%";
                 }
                 color: "white"
+                horizontalAlignment: Text.AlignHCenter
             }
         }
     }
