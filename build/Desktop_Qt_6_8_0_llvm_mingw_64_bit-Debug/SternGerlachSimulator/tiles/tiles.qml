@@ -7,6 +7,14 @@ Rectangle {
     height: 720
     color: "black"
 
+    // Add property to receive state from Main.qml
+    property string initialState: Window.window ? Window.window.selectedState : "+Z"
+    
+    onInitialStateChanged: {
+        console.debug("Initial state changed to:", initialState);
+        // Handle state change logic here
+    }
+
     // Add counter for unique IDs
     property int nextId: 0
 
@@ -20,44 +28,6 @@ Rectangle {
             }
         }
         return arr;
-    }
-
-    // Add pattern checking function
-    function checkPatterns(gridX, gridY) {
-        // Check all possible patterns
-        const patterns = [
-            [{x:0, y:0, type:"X"}, {x:2, y:0, type:"-"}, {x:2, y:1, type:"|"}],
-            [{x:0, y:0, type:"X"}, {x:2, y:0, type:"|"}, {x:2, y:1, type:"-"}],
-            [{x:0, y:0, type:"Z"}, {x:2, y:0, type:"-"}, {x:2, y:1, type:"|"}],
-            [{x:0, y:0, type:"Z"}, {x:2, y:0, type:"|"}, {x:2, y:1, type:"-"}]
-        ];
-
-        // Check each pattern starting from the given position
-        for (let pattern of patterns) {
-            let matches = true;
-            for (let cell of pattern) {
-                let checkX = gridX + cell.x;
-                let checkY = gridY + cell.y;
-                
-                if (checkX >= 12 || checkY >= 12 || 
-                    gridArray[checkY][checkX].type !== cell.type) {
-                    matches = false;
-                    break;
-                }
-            }
-
-            if (matches) {
-                // Lock the matching cells
-                for (let cell of pattern) {
-                    let lockX = gridX + cell.x;
-                    let lockY = gridY + cell.y;
-                    gridArray[lockY][lockX].locked = true;
-                }
-                console.debug("Pattern found and locked!");
-                return true;
-            }
-        }
-        return false;
     }
 
     // Update printGrid function to handle new structure
@@ -112,6 +82,7 @@ Rectangle {
                         if (lastDragSource) {
                             if (drag.source.Drag.keys.indexOf("red") >= 0) type = "X";
                             else if (drag.source.Drag.keys.indexOf("blue") >= 0) type = "Z";
+                            else if (drag.source.Drag.keys.indexOf("orange") >= 0) type = "Y"; // Add this line
                             else if (drag.source.Drag.keys.indexOf("white") >= 0) type = "-";
                             else if (drag.source.Drag.keys.indexOf("wall") >= 0) type = "|";
                             else if (drag.source.Drag.keys.indexOf("output") >= 0) type = "o"; // Changed from "O" to "o"
@@ -135,7 +106,6 @@ Rectangle {
                             // Store both type and ID
                             gridArray[gridY][gridX] = { type: type, id: lastDragId, locked: false };
                             console.debug("Drop completed at:", gridX, gridY, "with ID:", lastDragId);
-                            checkPatterns(gridX, gridY);
                             printGrid();
                         }
                     }
@@ -169,13 +139,21 @@ Rectangle {
         Repeater {
             model: [0, 1, 2]
             delegate: DragTile {
+                colorKey: "orange"
+                axisLabel: "y"
+            }
+        }
+
+        Repeater {
+            model: [0, 1, 2]
+            delegate: DragTile {
                 colorKey: "blue"
                 axisLabel: "z"
             }
         }
 
         Repeater {
-            model: [0, 1, 2, 3, 4, 5, 6]
+            model: [0, 1, 2, 3]
             delegate: ConnectionLine { }
         }
 
@@ -188,7 +166,7 @@ Rectangle {
         Repeater {
             model: [0]
             delegate: Output {
-                text: "-"  // Customize text as needed
+                text: "out"  // Customize text as needed
             }
         }
     }
