@@ -43,7 +43,7 @@ Rectangle {
         }
         width: parent.width - sourceColumn.width - 10
         height: parent.height - 10
-        opacity: 0.5
+        opacity: 0.5 // why was this even here?
         columns: 12  // Increased since tiles are smaller
 
         Repeater {
@@ -68,18 +68,20 @@ Rectangle {
                         console.debug("dropTile:", dropTile);
 
                         let type = ".";
-                        // Simplify the drop check - parent changed check might be too strict
                         if (lastDragSource) {
                             if (drag.source.Drag.keys.indexOf("red") >= 0) type = "X";
                             else if (drag.source.Drag.keys.indexOf("blue") >= 0) type = "Z";
                             else if (drag.source.Drag.keys.indexOf("white") >= 0) type = "-";
                             else if (drag.source.Drag.keys.indexOf("wall") >= 0) type = "|";
 
-                            // Clear previous position if it exists
-                            for (let i = 0; i < 12; i++) {
-                                for (let j = 0; j < 12; j++) {
-                                    if (gridArray[i][j] === type) {
-                                        gridArray[i][j] = ".";
+                            // Only clear previous position if dragging from grid, not sourceColumn
+                            let isFromSourceColumn = lastDragSource.parent.toString().includes("sourceColumn");
+                            if (!isFromSourceColumn) {
+                                for (let i = 0; i < 12; i++) {
+                                    for (let j = 0; j < 12; j++) {
+                                        if (gridArray[i][j] === type) {
+                                            gridArray[i][j] = ".";
+                                        }
                                     }
                                 }
                             }
