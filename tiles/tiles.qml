@@ -21,11 +21,10 @@ Rectangle {
         width: parent.width - sourceColumn.width - 10
         height: parent.height - 10
         opacity: 0.5
-        columns: 8  // Reduced columns to accommodate larger tiles
-        // spacing: 2 // this is an option
+        columns: 12  // Increased since tiles are smaller
 
         Repeater {
-            model: 64  // Adjusted for new grid size
+            model: 144   // Increased grid capacity
             delegate: DropTile {
                 colorKey: "any"
             }
@@ -41,13 +40,14 @@ Rectangle {
             bottom: parent.bottom
             margins: 5
         }
-        width: 128  // Increased to accommodate larger tiles
+        width: 72  // Was 96
         spacing: -4
 
         Repeater {
             model: [0, 1, 2]
-            delegate: DragTile_X {
+            delegate: DragTile {
                 colorKey: "red"
+                axisLabel: "x"
             }
         }
 
@@ -55,12 +55,18 @@ Rectangle {
             model: [0, 1, 2]
             delegate: DragTile {
                 colorKey: "blue"
+                axisLabel: "z"
             }
         }
 
         Repeater {
-            model: [0, 1, 2]
+            model: [0, 1, 2, 3, 4, 5, 6]
             delegate: ConnectionLine { }
+        }
+
+        Repeater {
+            model: [0, 1, 2, 3]
+            delegate: Wall { }
         }
     }
 }

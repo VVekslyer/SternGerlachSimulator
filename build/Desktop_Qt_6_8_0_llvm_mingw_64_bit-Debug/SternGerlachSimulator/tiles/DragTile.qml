@@ -6,15 +6,16 @@ Item {
 
     required property string colorKey
     required property int modelData
+    required property string axisLabel  // New property for x/z
 
-    width: 128  // Doubled
-    height: 128 // Doubled
+    width: 72  // Was 96 (75%)
+    height: 72 // Was 96 (75%)
 
     MouseArea {
         id: mouseArea
 
-        width: 144  // Doubled (72 * 2)
-        height: 128 // Doubled
+        width: 81  // Was 108
+        height: 72  // Was 96
         anchors.centerIn: parent
 
         drag.target: tile
@@ -24,40 +25,40 @@ Item {
         Rectangle {
             id: tile
 
-            width: 156  // Doubled (78 * 2)
-            height: 128 // Doubled
+            width: 88   // Was 117
+            height: 72  // Was 96
             anchors {
-            verticalCenter: parent.verticalCenter
-            horizontalCenter: parent.horizontalCenter
+                verticalCenter: parent.verticalCenter
+                horizontalCenter: parent.horizontalCenter
             }
-            transform: Translate { x: 39; y: 32 }  // Move rectangle right and down
+            transform: Translate { x: 22; y: 18 }  // Was 29, 24
 
             color: root.colorKey
 
             Drag.keys: [ root.colorKey ]
             Drag.active: mouseArea.drag.active
-            Drag.hotSpot.x: 64  // Adjusted for new center
-            Drag.hotSpot.y: 64  // Adjusted for new center
+            Drag.hotSpot.x: 18  // Was 24
+            Drag.hotSpot.y: 18  // Was 24
 
             Text {
-            anchors.fill: parent
-            color: "white"
-            font.pixelSize: 96  // Increased for larger tile
-            textFormat: Text.RichText
-            text: "SG<small>z</small>"
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
+                anchors.fill: parent
+                color: "white"
+                font.pixelSize: 54  // Was 72
+                textFormat: Text.RichText
+                text: "SG<small>" + root.axisLabel + "</small>"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
             }
 
             states: State {
-            when: mouseArea.drag.active
-            AnchorChanges {
-                target: tile
-                anchors {
-                verticalCenter: undefined
-                horizontalCenter: undefined
+                when: mouseArea.drag.active
+                AnchorChanges {
+                    target: tile
+                    anchors {
+                        verticalCenter: undefined
+                        horizontalCenter: undefined
+                    }
                 }
-            }
             }
         }
     }

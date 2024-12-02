@@ -4,14 +4,14 @@ import QtQuick 2.15
 Item {
     id: root
 
-    width: 64
-    height: 64
+    width: 72  // Was 96
+    height: 48 // Was 64
 
     MouseArea {
         id: mouseArea
 
-        width: 78
-        height: 64
+        width: 59  // Was 78
+        height: 48 // Was 64
         anchors.centerIn: parent
 
         drag.target: tile
@@ -21,11 +21,12 @@ Item {
         Rectangle {
             id: tile
 
-            width: 78
-            height: 4
+            width: 88  // Was 58
+            height: 3  // Was 4
             anchors {
                 verticalCenter: parent.verticalCenter
                 horizontalCenter: parent.horizontalCenter
+                horizontalCenterOffset: 22
             }
 
             color: "white"

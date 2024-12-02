@@ -20,8 +20,9 @@ qt_add_qml_module(appSternGerlachSimulator
         QML_FILES tiles/tiles.qml
         QML_FILES tiles/DragTile.qml
         QML_FILES tiles/DropTile.qml
-        QML_FILES tiles/DragTile_X.qml
+        QML_FILES
         QML_FILES tiles/ConnectionLine.qml
+        QML_FILES tiles/Wall.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
