@@ -6,4 +6,5 @@ DragTile 1.0 tiles/DragTile.qml
 DropTile 1.0 tiles/DropTile.qml
 ConnectionLine 1.0 tiles/ConnectionLine.qml
 Wall 1.0 tiles/Wall.qml
+Output 1.0 tiles/Output.qml
 

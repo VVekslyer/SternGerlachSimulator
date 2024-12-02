@@ -8,7 +8,7 @@ DropArea {
 
     width: 44  // Was 58
     height: 36 // Was 48
-    keys: colorKey == "any" ? ["red", "blue", "white", "line", "wall"] : [ colorKey ]
+    keys: colorKey == "any" ? ["red", "blue", "white", "line", "wall", "output"] : [ colorKey ]
 
     Rectangle {
         id: dropRectangle
