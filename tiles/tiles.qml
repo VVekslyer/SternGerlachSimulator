@@ -1,5 +1,6 @@
 // tiles/tiles.qml
 import QtQuick 2.15
+import SternGerlach 1.0
 
 Rectangle {
     id: root
@@ -9,7 +10,12 @@ Rectangle {
 
     // Add property to receive state from Main.qml
     property string initialState: Window.window ? Window.window.selectedState : "+Z"
-    
+    property int particleCount: Window.window ? Window.window.particleCount : 100  // Default 100
+
+    SternGerlachSimulator {
+        id: simulator
+    }
+
     onInitialStateChanged: {
         console.debug("Initial state changed to:", initialState);
         // Handle state change logic here
@@ -41,6 +47,17 @@ Rectangle {
             console.debug(row);
         }
         console.debug("-----------------------");
+    }
+
+    // After grid updates, check pattern
+    function checkPattern() {
+        let gridData = [];
+        for (let i = 0; i < 16; i++) {
+            for (let j = 0; j < 16; j++) {
+                gridData.push(gridArray[i][j].type);
+            }
+        }
+        simulator.analyzeGrid(gridData, initialState, particleCount);
     }
 
     Grid {
@@ -111,6 +128,7 @@ Rectangle {
                     }
                     isDragActive = false;
                     lastDragSource = null;
+                    checkPattern();
                 }
             }
         }

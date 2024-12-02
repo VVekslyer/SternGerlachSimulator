@@ -1,2 +1,56 @@
 [
+    {
+        "classes": [
+            {
+                "className": "SternGerlachSimulator",
+                "lineNumber": 8,
+                "methods": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "grid",
+                                "type": "QVariantList"
+                            },
+                            {
+                                "name": "initialState",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "particleCount",
+                                "type": "int"
+                            }
+                        ],
+                        "index": 1,
+                        "name": "analyzeGrid",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 2,
+                        "name": "getResults",
+                        "returnType": "QVariantMap"
+                    }
+                ],
+                "object": true,
+                "qualifiedClassName": "SternGerlachSimulator",
+                "signals": [
+                    {
+                        "access": "public",
+                        "index": 0,
+                        "name": "resultsChanged",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "sterngerlachsimulator.h",
+        "outputRevision": 68
+    }
 ]
