@@ -14,6 +14,7 @@ Rectangle {
 
     SternGerlachSimulator {
         id: simulator
+        objectName: "simulator"  // Add this
     }
 
     onInitialStateChanged: {
@@ -71,7 +72,7 @@ Rectangle {
         }
         width: parent.width - sourceColumn.width - 10
         height: parent.height - 10
-        opacity: 0.5
+        // opacity: 0
         columns: 16  // Changed from 12 to 16
 
         Repeater {
@@ -181,11 +182,10 @@ Rectangle {
         }
 
         // Add after other Repeaters
-        Repeater {
-            model: [0]
-            delegate: Output {
-                text: "out"  // Customize text as needed
-            }
+        Output {
+            text: "out"
+            simulator: root.simulator
+            modelData: 0  // Since it's required, provide a default
         }
     }
 }

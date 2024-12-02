@@ -15,6 +15,6 @@ DropArea {
 
         anchors.fill: parent
         color: dragTarget.containsDrag ? "grey" : (colorKey == "any" ? "white" : dragTarget.colorKey)
-        //opacity: 0 // clear out the grey color
+        opacity: 0 // clear out the grey color
     }
 }

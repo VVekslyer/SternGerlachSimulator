@@ -74,9 +74,9 @@ bool SternGerlachSimulator::findPattern(const QVariantList& grid, QVector<char>&
         sgDirections.clear();
         blockSpinUp.clear();
         
-        // 3 devices: Y->Z->X, need 2 blocking values
-        sgDirections = QVector<char>{'Y', 'Z', 'X'};  // 3 elements
-        blockSpinUp = QVector<bool>{true, false};      // Should be {true, false} for 2 elements
+        // 3 devices: X->Z->Y, need 2 blocking values
+        sgDirections = QVector<char>{'X', 'Z', 'Y'};  // Left to right order
+        blockSpinUp = QVector<bool>{true, true};    // false = keep spin up path
         
         return true;
     }
@@ -148,13 +148,19 @@ void SternGerlachSimulator::runSimulation(const QString& initialState,
     State state = generateInitialState(initialState);
     int remainingParticles = particleCount;
     
-    qDebug() << "Starting simulation with:";
-    qDebug() << "SG directions size:" << sgDirections.size();
-    qDebug() << "Block spin up size:" << blockSpinUp.size();
+    qDebug() << "\nSimulation Configuration:";
+    QString config = "SG-" + QString(sgDirections[0]);
+    for (int i = 0; i < blockSpinUp.size(); i++) {
+        config += blockSpinUp[i] ? " --SpinDown--> " : " --SpinUp--> ";
+        config += "SG-" + QString(sgDirections[i+1]);
+    }
+    config += " ---> Final Output";
+    qDebug() << config;
+    qDebug() << "\nSending through SG configuration...\n";
     
     // For each SG device
     for (int i = 0; i < sgDirections.size(); i++) {
-        QVector<int> upDown(2, 0);  // Initialize with size 2, both values 0
+        QVector<int> upDown(2, 0);
         
         // Run particles through current SG device
         for (int p = 0; p < remainingParticles; p++) {
@@ -166,12 +172,12 @@ void SternGerlachSimulator::runSimulation(const QString& initialState,
             }
         }
         
-        qDebug() << "Device" << i << "results:" << upDown[0] << "up," << upDown[1] << "down";
-        
-        // Only update remaining particles if not the last device
+        // Update remaining particles if not last device
         if (i < blockSpinUp.size()) {
-            remainingParticles = blockSpinUp[i] ? upDown[0] : upDown[1];
-            state.theta = blockSpinUp[i] ? 0 : PI;
+            // If blockSpinUp is true, we block spin up particles (keep down)
+            // If blockSpinUp is false, we block spin down particles (keep up)
+            remainingParticles = blockSpinUp[i] ? upDown[1] : upDown[0];
+            state.theta = blockSpinUp[i] ? PI : 0;
             state.phi = 0;
         }
     }
@@ -194,10 +200,21 @@ void SternGerlachSimulator::runSimulation(const QString& initialState,
     results.upPercent = 100.0 * finalUp / remainingParticles;
     results.downPercent = 100.0 * finalDown / remainingParticles;
     
-    qDebug() << "Simulation complete:";
-    qDebug() << "Particle throughput:" << results.particleSum << "/" << results.particleCount;
-    qDebug() << "Up particles:" << results.upCount;
-    qDebug() << "Down particles:" << results.downCount;
+    // Format output like the example
+    qDebug() << QString("Total particle throughput: %1/%2 (%3% of original amount)")
+                .arg(results.particleSum / 2)
+                .arg(results.particleCount)
+                .arg(results.throughputPercent / 2, 0, 'f', 0);
+                
+    qDebug() << QString("Particles measured with spin up: %1 (%2% of final output, %3% of original amount)")
+                .arg(results.upCount / 2)
+                .arg(results.upPercent / 2, 0, 'f', 0)
+                .arg(100.0 * results.upCount / results.particleCount / 2, 0, 'f', 0);
+                
+    qDebug() << QString("Particles measured with spin down: %1 (%2% of final output, %3% of original amount)")
+                .arg(results.downCount / 2)
+                .arg(results.downPercent / 2, 0, 'f', 0)
+                .arg(100.0 * results.downCount / results.particleCount / 2, 0, 'f', 0);
     
     emit resultsChanged();
 }

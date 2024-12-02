@@ -27,6 +27,7 @@ Item {
 
             width: 88   // Was 117
             height: 72  // Was 96
+            
             anchors {
                 verticalCenter: parent.verticalCenter
                 horizontalCenter: parent.horizontalCenter
