@@ -21,9 +21,9 @@ Rectangle {
     // Add locked property to grid cells
     property var gridArray: {
         let arr = [];
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 16; i++) {  // Changed from 12 to 16
             arr[i] = [];
-            for (let j = 0; j < 12; j++) {
+            for (let j = 0; j < 16; j++) {  // Changed from 12 to 16
                 arr[i][j] = { type: ".", id: -1, locked: false };
             }
         }
@@ -33,14 +33,14 @@ Rectangle {
     // Update printGrid function to handle new structure
     function printGrid() {
         console.debug("\nGrid State:");
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 16; i++) {  // Changed from 12 to 16
             let row = "";
-            for (let j = 0; j < 12; j++) {
+            for (let j = 0; j < 16; j++) {  // Changed from 12 to 16
                 row += gridArray[i][j].type + " ";
             }
             console.debug(row);
         }
-        console.debug("-------------------");
+        console.debug("-----------------------");
     }
 
     Grid {
@@ -55,10 +55,10 @@ Rectangle {
         width: parent.width - sourceColumn.width - 10
         height: parent.height - 10
         opacity: 0.5
-        columns: 12  // Increased since tiles are smaller
+        columns: 16  // Changed from 12 to 16
 
         Repeater {
-            model: 144   // Increased grid capacity
+            model: 256  // Changed from 144 (16x16 = 256)
             delegate: DropTile {
                 id: dropTile
                 colorKey: "any"
@@ -90,8 +90,8 @@ Rectangle {
                             let isFromSourceColumn = lastDragSource.parent.toString().includes("sourceColumn");
                             if (!isFromSourceColumn) {
                                 // Clear only the specific instance using ID
-                                for (let i = 0; i < 12; i++) {
-                                    for (let j = 0; j < 12; j++) {
+                                for (let i = 0; i < 16; i++) {
+                                    for (let j = 0; j < 16; j++) {
                                         if (gridArray[i][j].type === type && 
                                             gridArray[i][j].id === lastDragId) {
                                             gridArray[i][j] = { type: ".", id: -1, locked: false };
@@ -100,8 +100,8 @@ Rectangle {
                                 }
                             }
 
-                            let gridX = Math.floor(index % 12);
-                            let gridY = Math.floor(index / 12);
+                            let gridX = Math.floor(index % 16);
+                            let gridY = Math.floor(index / 16);
                             
                             // Store both type and ID
                             gridArray[gridY][gridX] = { type: type, id: lastDragId, locked: false };
@@ -153,12 +153,12 @@ Rectangle {
         }
 
         Repeater {
-            model: [0, 1, 2, 3]
+            model: [0, 1, 2]
             delegate: ConnectionLine { }
         }
 
         Repeater {
-            model: [0, 1, 2, 3]
+            model: [0, 1, 2]
             delegate: Wall { }
         }
 

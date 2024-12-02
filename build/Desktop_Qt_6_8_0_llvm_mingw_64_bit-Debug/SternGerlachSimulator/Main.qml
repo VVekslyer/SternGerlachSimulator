@@ -166,6 +166,40 @@ Window {
             Layout.fillHeight: true
             source: "tiles/tiles.qml"
         }
+
+        // Stats panel
+        Rectangle {
+            Layout.fillWidth: true
+            height: 80
+            color: "black"
+            
+            Column {
+                anchors {
+                    left: parent.left
+                    verticalCenter: parent.verticalCenter
+                    leftMargin: 10
+                }
+                spacing: 5
+
+                Text {
+                    text: "Total particle throughput: 20/100 (20% of original amount)"
+                    color: "#CCCCCC"
+                    font.pixelSize: 12
+                }
+                
+                Text {
+                    text: "Particles measured with spin up: 6 (30% of final output, 6% of original amount)"
+                    color: "#CCCCCC"
+                    font.pixelSize: 12
+                }
+                
+                Text {
+                    text: "Particles measured with spin down: 14 (70% of final output, 14% of original amount)"
+                    color: "#CCCCCC"
+                    font.pixelSize: 12
+                }
+            }
+        }
     }
 
     // Property to expose selected state to tiles.qml
