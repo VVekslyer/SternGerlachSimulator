@@ -22,6 +22,14 @@ Rectangle {
     SternGerlachSimulator {
         id: simulator
         objectName: "simulator"  // Add this
+        
+        Component.onCompleted: {
+            console.debug("[Tiles] Simulator created")
+        }
+        
+        onResultsChanged: {
+            console.debug("[Tiles] Results changed in simulator")
+        }
     }
 
     onInitialStateChanged: {
@@ -190,9 +198,20 @@ Rectangle {
 
         // Add after other Repeaters
         Output {
+            id: outputTile
             text: "out"
-            simulator: root.simulator
-            modelData: 0  // Since it's required, provide a default
+            simulator: simulator
+            modelData: 0
+
+            // Force connection to simulator signals
+            Connections {
+                target: simulator
+                function onResultsChanged() {
+                    console.debug("[Tiles] Forwarding results to Output")
+                    outputTile.simulator = null  // Force property update
+                    outputTile.simulator = simulator
+                }
+            }
         }
     }
 }

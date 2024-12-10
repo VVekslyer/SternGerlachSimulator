@@ -1,7 +1,7 @@
 /*
  *  Stern-Gerlach Simulator Project
  *  
- *  Copyright © 2024 Vitaliy Vekslyer and Robert Truong.
+ *  Copyright © 2024 Vitaliy Vekslyer and Robert Truong
  *
  *  SternGerlachSimulator.h
  */
@@ -19,6 +19,8 @@ class SternGerlachSimulator : public QObject {
     Q_PROPERTY(double throughputPercent READ throughputPercent NOTIFY resultsChanged)
     Q_PROPERTY(double upPercent READ upPercent NOTIFY resultsChanged)
     Q_PROPERTY(double downPercent READ downPercent NOTIFY resultsChanged)
+    Q_PROPERTY(int upCount READ upCount NOTIFY resultsChanged)
+    Q_PROPERTY(int downCount READ downCount NOTIFY resultsChanged)
 
 public:
     explicit SternGerlachSimulator(QObject *parent = nullptr);
@@ -32,6 +34,8 @@ public:
     double throughputPercent() const { return results.throughputPercent; }
     double upPercent() const { return results.upPercent; }
     double downPercent() const { return results.downPercent; }
+    int upCount() const { return results.upCount; }
+    int downCount() const { return results.downCount; }
 
 signals:
     void resultsChanged();

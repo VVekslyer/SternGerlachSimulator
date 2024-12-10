@@ -216,8 +216,10 @@ void SternGerlachSimulator::runSimulation(const QString& initialState,
     
     results.upCount = finalUp;
     results.downCount = finalDown;
-    results.upPercent = 100.0 * finalUp / remainingParticles;
-    results.downPercent = 100.0 * finalDown / remainingParticles;
+    // results.upPercent = 100.0 * finalUp / remainingParticles;
+    // results.downPercent = 100.0 * finalDown / remainingParticles;
+    results.upPercent = 100.0 * results.upCount / results.particleCount;
+    results.downPercent = 100.0 * results.downCount / results.particleCount;
     
     // Format output like the example
     qDebug() << QString("Total particle throughput: %1/%2 (%3% of original amount)")
@@ -227,13 +229,13 @@ void SternGerlachSimulator::runSimulation(const QString& initialState,
                 
     qDebug() << QString("Particles measured with spin up: %1 (%2% of final output, %3% of original amount)")
                 .arg(results.upCount)
-                .arg(results.upPercent, 0, 'f', 0)
-                .arg(100.0 * results.upCount / results.particleCount, 0, 'f', 0);
+                .arg(100.0 * finalUp / remainingParticles, 0, 'f', 0)
+                .arg(results.upPercent, 0, 'f', 0);
                 
     qDebug() << QString("Particles measured with spin down: %1 (%2% of final output, %3% of original amount)")
                 .arg(results.downCount)
-                .arg(results.downPercent, 0, 'f', 0)
-                .arg(100.0 * results.downCount / results.particleCount, 0, 'f', 0);
+                .arg(100.0 * finalDown / remainingParticles, 0, 'f', 0)
+                .arg(results.downPercent, 0, 'f', 0);
     
     emit resultsChanged();
 }

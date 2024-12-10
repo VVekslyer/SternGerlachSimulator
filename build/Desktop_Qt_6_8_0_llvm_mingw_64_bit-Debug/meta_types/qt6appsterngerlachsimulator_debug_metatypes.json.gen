@@ -103,6 +103,34 @@
                         "stored": true,
                         "type": "double",
                         "user": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 5,
+                        "name": "upCount",
+                        "notify": "resultsChanged",
+                        "read": "upCount",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 6,
+                        "name": "downCount",
+                        "notify": "resultsChanged",
+                        "read": "downCount",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false
                     }
                 ],
                 "qualifiedClassName": "SternGerlachSimulator",
