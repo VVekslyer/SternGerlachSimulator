@@ -51,8 +51,8 @@ bool SternGerlachSimulator::findPattern(const QVariantList& grid, QVector<char>&
         int width;
     };
 
-    // Define the original patterns (3x13)
-    Pattern pattern1 = {
+    // Define all possible 3-SG patterns (bottom to top)
+    Pattern pattern1_XZY = {  // Original
         {
             ". . . . . . . . Y . - . o",
             ". . . . Z . . . . . | . .",
@@ -61,7 +61,7 @@ bool SternGerlachSimulator::findPattern(const QVariantList& grid, QVector<char>&
         3, 13
     };
 
-    Pattern pattern2 = {
+    Pattern pattern2_XZY_alt = {  // Original alternative output
         {
             ". . . . . . . . Y . | . .",
             ". . . . Z . . . . . - . o",
@@ -70,8 +70,45 @@ bool SternGerlachSimulator::findPattern(const QVariantList& grid, QVector<char>&
         3, 13
     };
 
-    // Define the new pattern (2x9)
-    Pattern pattern3 = {
+    // Add new 3-SG variations
+    Pattern pattern_ZXY = {
+        {
+            ". . . . . . . . Y . - . o",
+            ". . . . X . . . . . | . .",
+            "Z . . . . . . . . . . . ."
+        },
+        3, 13
+    };
+
+    Pattern pattern_YXZ = {
+        {
+            ". . . . . . . . Z . - . o",
+            ". . . . X . . . . . | . .",
+            "Y . . . . . . . . . . . ."
+        },
+        3, 13
+    };
+
+    Pattern pattern_YZX = {
+        {
+            ". . . . . . . . X . - . o",
+            ". . . . Z . . . . . | . .",
+            "Y . . . . . . . . . . . ."
+        },
+        3, 13
+    };
+
+    Pattern pattern_XYZ = {
+        {
+            ". . . . . . . . Z . - . o",
+            ". . . . Y . . . . . | . .",
+            "X . . . . . . . . . . . ."
+        },
+        3, 13
+    };
+
+    // 2-SG patterns
+    Pattern pattern_XZ = {  // Original 2-SG
         {
             ". . . . X . - . o",
             "Z . . . . . | . ."
@@ -79,8 +116,57 @@ bool SternGerlachSimulator::findPattern(const QVariantList& grid, QVector<char>&
         2, 9
     };
 
-    // Store all patterns in a list
-    QVector<Pattern> patterns = {pattern1, pattern2, pattern3};
+    Pattern pattern_ZX = {
+        {
+            ". . . . X . - . o",
+            "Z . . . . . | . ."
+        },
+        2, 9
+    };
+
+    Pattern pattern_XY = {
+        {
+            ". . . . Y . - . o",
+            "X . . . . . | . ."
+        },
+        2, 9
+    };
+
+    Pattern pattern_YX = {
+        {
+            ". . . . X . - . o",
+            "Y . . . . . | . ."
+        },
+        2, 9
+    };
+
+    Pattern pattern_YZ = {
+        {
+            ". . . . Z . - . o",
+            "Y . . . . . | . ."
+        },
+        2, 9
+    };
+
+    Pattern pattern_ZY = {
+        {
+            ". . . . Y . - . o",
+            "Z . . . . . | . ."
+        },
+        2, 9
+    };
+
+    // Store all patterns in list
+    QVector<Pattern> patterns = {
+        // 3-SG patterns
+        pattern1_XZY, pattern2_XZY_alt, 
+        pattern_ZXY, pattern_YXZ,
+        pattern_YZX, pattern_XYZ,
+        // 2-SG patterns
+        pattern_XZ, pattern_ZX,
+        pattern_XY, pattern_YX,
+        pattern_YZ, pattern_ZY
+    };
 
     // Convert incoming grid to 2D array
     QVector<QVector<QString>> currentGrid(HEIGHT, QVector<QString>(WIDTH));
@@ -118,17 +204,19 @@ bool SternGerlachSimulator::findPattern(const QVariantList& grid, QVector<char>&
 
                 if (matches) {
                     // Pattern found - set directions and spin states
-                    if (pat.patternData == pattern3.patternData) {
+                    if (pat.patternData == pattern_XZ.patternData || pat.patternData == pattern_ZX.patternData ||
+                        pat.patternData == pattern_XY.patternData || pat.patternData == pattern_YX.patternData ||
+                        pat.patternData == pattern_YZ.patternData || pat.patternData == pattern_ZY.patternData) {
                         // Handling the new pattern (2 SG devices)
-                        sgDirections = {'X', 'Z'};  // Order: bottom to top
+                        sgDirections = {pat.patternData[1][0].toLatin1(), pat.patternData[0][8].toLatin1()};  // Order: bottom to top
                         blockSpinUp = {true};       // Only one blocking decision needed
                                                     // between the two SG devices
                     } else {
                         // Existing patterns (3 SG devices)
-                        sgDirections = {'X', 'Z', 'Y'};  // Order: bottom to top
+                        sgDirections = {pat.patternData[2][0].toLatin1(), pat.patternData[1][4].toLatin1(), pat.patternData[0][8].toLatin1()};  // Order: bottom to top
                         blockSpinUp = {true, true, false}; // Corresponding spin states
 
-                        if (pat.patternData == pattern2.patternData) {
+                        if (pat.patternData == pattern2_XZY_alt.patternData) {
                             // Adjust spin states if necessary for pattern2
                             blockSpinUp[2] = true; // Example adjustment
                         }
@@ -226,68 +314,50 @@ void SternGerlachSimulator::runSimulation(const QString& initialState,
                                           int particleCount) {
     State state = generateInitialState(initialState);
     results.particleCount = particleCount;
-
+    
     int countUpFinal = 0, countDownFinal = 0;
+    int remainingParticles = 0;
 
-    if (sgDirections.size() == 2) { // 2 SGs
-        // Two SG device case - existing code works correctly
-        for (int i = 0; i < particleCount; i++) {
-            State result1 = SG_Measurement(state, sgDirections[0]);
-            bool isSpinUp1 = (result1.theta < PI / 2);
+    // Process each particle through the SG sequence
+    for (int i = 0; i < particleCount; i++) {
+        bool particleBlocked = false;
+        State currentState = state;
 
-            State intermediateState = setState(sgDirections[0], isSpinUp1);
-            State result2 = SG_Measurement(intermediateState, sgDirections[1]);
+        // Process through each SG device in sequence
+        for (int sg = 0; sg < sgDirections.size() - 1; sg++) {
+            // Measure current SG
+            State result = SG_Measurement(currentState, sgDirections[sg]);
+            bool isSpinUp = (result.theta < PI / 2);
 
-            if (result2.theta < PI / 2) {
+            // Check if particle is blocked
+            if (blockSpinUp[sg] == isSpinUp) {
+                particleBlocked = true;
+                break;
+            }
+
+            // Prepare state for next measurement
+            currentState = setState(sgDirections[sg], isSpinUp);
+        }
+
+        // If particle wasn't blocked, measure final SG
+        if (!particleBlocked) {
+            State finalResult = SG_Measurement(currentState, 
+                              sgDirections[sgDirections.size()-1]);
+            
+            remainingParticles++;
+            if (finalResult.theta < PI / 2) {
                 countUpFinal++;
             } else {
                 countDownFinal++;
             }
         }
-        results.particleSum = particleCount;
-    } else if (sgDirections.size() == 3) { // 3 SGs
-        // Three SG device case
-        int passedParticles = 0;
-
-        for (int i = 0; i < particleCount; i++) {
-            // First SG measurement
-            State result1 = SG_Measurement(state, sgDirections[0]);
-            bool isSpinUp1 = (result1.theta < PI / 2);
-
-            // Check if blocked at first filter
-            if (blockSpinUp[0] == isSpinUp1) {
-                continue;
-            }
-
-            // Second SG measurement
-            State intermediateState1 = setState(sgDirections[0], isSpinUp1);
-            State result2 = SG_Measurement(intermediateState1, sgDirections[1]);
-            bool isSpinUp2 = (result2.theta < PI / 2);
-
-            // Check if blocked at second filter
-            if (blockSpinUp[1] == isSpinUp2) {
-                continue;
-            }
-
-            // Final SG measurement
-            State intermediateState2 = setState(sgDirections[1], isSpinUp2);
-            State result3 = SG_Measurement(intermediateState2, sgDirections[2]);
-
-            // Count only particles that made it through all filters
-            passedParticles++;
-            if (result3.theta < PI / 2) {
-                countUpFinal++;
-            } else {
-                countDownFinal++;
-            }
-        }
-        results.particleSum = passedParticles;
     }
 
-    // Calculate percentages based on original particle count
+    // Calculate results
+    results.particleSum = remainingParticles;
     results.upCount = countUpFinal;
     results.downCount = countDownFinal;
-    results.throughputPercent = (double)results.particleSum / particleCount * 100.0;
+    results.throughputPercent = (double)remainingParticles / particleCount * 100.0;
     results.upPercent = (double)countUpFinal / particleCount * 100.0;
     results.downPercent = (double)countDownFinal / particleCount * 100.0;
 
