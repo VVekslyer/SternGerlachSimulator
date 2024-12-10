@@ -33,24 +33,51 @@ SternGerlachSimulator::SternGerlachSimulator(QObject *parent)
 }
 
 bool SternGerlachSimulator::findPattern(const QVariantList& grid, QVector<char>& sgDirections, 
-                                      QVector<bool>& blockSpinUp) {
-    const int WIDTH = 16;
+                                        QVector<bool>& blockSpinUp) {
+    const int WIDTH = 16; // width and height of the entire grid
     const int HEIGHT = 16;
-    const int PATTERN_HEIGHT = 3;
-    const int PATTERN_WIDTH = 13;
 
-    // Clear and pre-allocate vectors with extra space
+    // Clear existing vectors
     sgDirections.clear();
     blockSpinUp.clear();
-    sgDirections.resize(16);  // Larger size
-    blockSpinUp.resize(16);   // Larger size
 
-    // The expected pattern we're looking for
-    const QString pattern[PATTERN_HEIGHT][PATTERN_WIDTH] = {
-        {".", ".", ".", ".", ".", ".", ".", ".", "Y", ".", "-", ".", "o"},
-        {".", ".", ".", ".", "Z", ".", ".", ".", ".", ".", "|", ".", "."},
-        {"X", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."}
+    // Define patterns with their respective dimensions
+    struct Pattern {
+        const QStringList patternData;
+        int height;
+        int width;
     };
+
+    // Define the original patterns (3x13)
+    Pattern pattern1 = {
+        {
+            ". . . . . . . . Y . - . o",
+            ". . . . Z . . . . . | . .",
+            "X . . . . . . . . . . . ."
+        },
+        3, 13
+    };
+
+    Pattern pattern2 = {
+        {
+            ". . . . . . . . Y . | . .",
+            ". . . . Z . . . . . - . o",
+            "X . . . . . . . . . . . ."
+        },
+        3, 13
+    };
+
+    // Define the new pattern (2x9)
+    Pattern pattern3 = {
+        {
+            ". . . . X . - . o",
+            "Z . . . . . | . ."
+        },
+        2, 9
+    };
+
+    // Store all patterns in a list
+    QVector<Pattern> patterns = {pattern1, pattern2, pattern3};
 
     // Convert incoming grid to 2D array
     QVector<QVector<QString>> currentGrid(HEIGHT, QVector<QString>(WIDTH));
@@ -60,41 +87,53 @@ bool SternGerlachSimulator::findPattern(const QVariantList& grid, QVector<char>&
         }
     }
 
-    // Try each possible position in the grid
-    for (int i = 0; i <= HEIGHT - PATTERN_HEIGHT; i++) {
-        for (int j = 0; j <= WIDTH - PATTERN_WIDTH; j++) {
-            bool matches = true;
-            
-            // Check if pattern matches at current position
-            for (int pi = 0; pi < PATTERN_HEIGHT && matches; pi++) {
-                for (int pj = 0; pj < PATTERN_WIDTH && matches; pj++) {
-                    if (currentGrid[i + pi][j + pj] != pattern[pi][pj]) {
-                        matches = false;
+    // Try each pattern
+    for (const auto& pat : patterns) {
+        int patternHeight = pat.height;
+        int patternWidth = pat.width;
+
+        // Convert pattern data to 2D array
+        QVector<QVector<QString>> patternGrid;
+        for (const QString& rowStr : pat.patternData) {
+            QStringList rowList = rowStr.split(' ', Qt::SkipEmptyParts);
+            patternGrid.append(rowList.toVector());
+        }
+
+        // Try each possible position in the grid
+        for (int i = 0; i <= HEIGHT - patternHeight; i++) {
+            for (int j = 0; j <= WIDTH - patternWidth; j++) {
+                bool matches = true;
+
+                // Check if pattern matches at current position
+                for (int pi = 0; pi < patternHeight && matches; pi++) {
+                    for (int pj = 0; pj < patternWidth && matches; pj++) {
+                        if (currentGrid[i + pi][j + pj] != patternGrid[pi][pj]) {
+                            matches = false;
+                        }
                     }
                 }
-            }
 
-            if (matches) {
-                // Resize vectors to exactly 4 elements (3 SG devices + 1 final measurement)
-                sgDirections.resize(4);
-                blockSpinUp.resize(3);  // Only 3 blocking decisions needed
-                
-                // Set values in order (bottom to top)
-                sgDirections[0] = 'X';
-                sgDirections[1] = 'Z';
-                sgDirections[2] = 'Y';
-                sgDirections[3] = 'Y';  // Final measurement direction
-                
-                blockSpinUp[0] = true;
-                blockSpinUp[1] = true;
-                blockSpinUp[2] = false;
+                if (matches) {
+                    // Pattern found - set directions and spin states
+                    if (pat.patternData == pattern3.patternData) {
+                        // Handling the new pattern (2 SG devices)
+                        sgDirections = {'X', 'Z'};  // Order: bottom to top
+                        blockSpinUp = {true, true}; // Corresponding spin states
+                    } else {
+                        // Existing patterns (3 SG devices)
+                        sgDirections = {'X', 'Z', 'Y'};  // Order: bottom to top
+                        blockSpinUp = {true, true, false}; // Corresponding spin states
 
-                qDebug() << "Vector sizes after pattern match:" << sgDirections.size() << blockSpinUp.size();
-                return true;
+                        if (pat.patternData == pattern2.patternData) {
+                            // Adjust spin states if necessary for pattern2
+                            blockSpinUp[2] = true; // Example adjustment
+                        }
+                    }
+                    return true;
+                }
             }
         }
     }
-    
     return false;
 }
 
@@ -154,95 +193,125 @@ State SG_Measurement(const State& input, char direction) {
     return output;
 }
 
-void SternGerlachSimulator::runSimulation(const QString& initialState, 
+State SternGerlachSimulator::setState(char direction, bool spinUp) {
+    State output;
+    if ((direction == 'Z' || direction == 'z') && spinUp) {
+        output.theta = 0;
+        output.phi = 0;
+    } else if ((direction == 'Z' || direction == 'z') && !spinUp) {
+        output.theta = PI;
+        output.phi = 0;
+    } else if ((direction == 'X' || direction == 'x') && spinUp) {
+        output.theta = PI / 2;
+        output.phi = 0;
+    } else if ((direction == 'X' || direction == 'x') && !spinUp) {
+        output.theta = PI / 2;
+        output.phi = PI;
+    } else if ((direction == 'Y' || direction == 'y') && spinUp) {
+        output.theta = PI / 2;
+        output.phi = PI / 2;
+    } else if ((direction == 'Y' || direction == 'y') && !spinUp) {
+        output.theta = PI / 2;
+        output.phi = 3 * PI / 2;
+    }
+    return output;
+}
+
+void SternGerlachSimulator::runSimulation(const QString& initialState,
                                           const QVector<char>& sgDirections,
-                                          const QVector<bool>& blockSpinUp, 
+                                          const QVector<bool>& blockSpinUp,
                                           int particleCount) {
     State state = generateInitialState(initialState);
-    int remainingParticles = particleCount;
-    
+
+    // Initialize results
+    results = SimResults{0, 0, 0, 0, 0.0, 0.0, 0.0};
+    results.particleCount = particleCount;
+
     qDebug() << "\nSimulation Configuration:";
-    QString config = "Initial state: " + initialState;
-    
-    // First device (X) just shows arrow
+    QString config = "Initial state: \"" + initialState + "\"\n";
+
     config += " --> SG-" + QString(sgDirections[0]);
-    
-    // Only process the next 2 devices (Z and Y)
-    for (int i = 1; i < 3; i++) {
-        config += (blockSpinUp[i-1] ? " --SpinUp--> " : " --SpinDown--> ");
+
+    for (int i = 1; i < sgDirections.size(); i++) {
+        config += (blockSpinUp[i - 1] ? " --SpinUp--> " : " --SpinDown--> ");
         config += "SG-" + QString(sgDirections[i]);
     }
-    
+
     config += " ---> Final Output";
     qDebug() << config;
-    
-    // Rest of simulation code remains the same...
-    // For each SG device
-    for (int i = 0; i < sgDirections.size(); i++) {
-        QVector<int> upDown(2, 0);
-        
-        // Run particles through current SG device
-        for (int p = 0; p < remainingParticles; p++) {
-            State result = SG_Measurement(state, sgDirections[i]);
-            if (result.theta < PI/2) {
-                upDown[0]++;  // Count spin up
+
+    int remainingParticles = particleCount;
+    int countUpFinal = 0;
+    int countDownFinal = 0;
+
+    if (sgDirections.size() == 1) {
+        // Single SG device
+        for (int i = 0; i < remainingParticles; i++) {
+            State result = SG_Measurement(state, sgDirections[0]);
+            if (result.theta < PI / 2) {
+                countUpFinal++;
             } else {
-                upDown[1]++;  // Count spin down
+                countDownFinal++;
             }
         }
-        
-        // Update remaining particles if not last device
-        if (i < blockSpinUp.size()) {
-            // If blockSpinUp is true, we block spin up particles (keep down)
-            // If blockSpinUp is false, we block spin down particles (keep up)
-            remainingParticles = blockSpinUp[i] ? upDown[1] : upDown[0];
-            state.theta = blockSpinUp[i] ? PI : 0;
-            state.phi = 0;
+    } else if (sgDirections.size() == 2) {
+        // Two SG devices
+        int countUp1 = 0;
+        int countDown1 = 0;
+
+        // First SG device
+        for (int i = 0; i < remainingParticles; i++) {
+            State result = SG_Measurement(state, sgDirections[0]);
+            if (result.theta < PI / 2) {
+                countUp1++;
+            } else {
+                countDown1++;
+            }
         }
+
+        qDebug() << QString("After SG-%1: SpinUp=%2, SpinDown=%3")
+                    .arg(sgDirections[0]).arg(countUp1).arg(countDown1);
+
+        // Determine which particles pass through the filter
+        bool blockUp1 = blockSpinUp[0];
+        int particlesToSecondSG = blockUp1 ? countDown1 : countUp1;
+
+        qDebug() << "Particles to SG-" << sgDirections[1] << ":" << particlesToSecondSG;
+
+        // Set the state after filtering
+        State filteredState = setState(sgDirections[0], !blockUp1);
+
+        // Second SG device
+        for (int i = 0; i < particlesToSecondSG; i++) {
+            State result = SG_Measurement(filteredState, sgDirections[1]);
+            if (result.theta < PI / 2) {
+                countUpFinal++;
+            } else {
+                countDownFinal++;
+            }
+        }
+
+        remainingParticles = particlesToSecondSG;
     }
-    
-    // Store final results
-    results.particleSum = remainingParticles;
-    results.particleCount = particleCount;
-    results.throughputPercent = 100.0 * remainingParticles / particleCount;
-    
-    // Run final measurement
-    int finalUp = 0, finalDown = 0;
-    for (int i = 0; i < remainingParticles; i++) {
-        State result = SG_Measurement(state, sgDirections.last());
-        if (result.theta < PI/2) finalUp++;
-        else finalDown++;
+    // Additional cases for more SG devices can be added similarly...
+
+    // Calculate results
+    results.particleSum = countUpFinal + countDownFinal;
+    results.upCount = countUpFinal;
+    results.downCount = countDownFinal;
+
+    if (particleCount > 0) {
+        results.throughputPercent = (double)results.particleSum / particleCount * 100.0;
+        results.upPercent = (double)results.upCount / particleCount * 100.0;
+        results.downPercent = (double)results.downCount / particleCount * 100.0;
     }
-    
-    results.upCount = finalUp;
-    results.downCount = finalDown;
-    // results.upPercent = 100.0 * finalUp / remainingParticles;
-    // results.downPercent = 100.0 * finalDown / remainingParticles;
-    results.upPercent = 100.0 * results.upCount / results.particleCount;
-    results.downPercent = 100.0 * results.downCount / results.particleCount;
-    
-    // Format output like the example
-    qDebug() << QString("Total particle throughput: %1/%2 (%3% of original amount)")
-                .arg(results.particleSum)
-                .arg(results.particleCount)
-                .arg(results.throughputPercent, 0, 'f', 0);
-                
-    qDebug() << QString("Particles measured with spin up: %1 (%2% of final output, %3% of original amount)")
-                .arg(results.upCount)
-                .arg(100.0 * finalUp / remainingParticles, 0, 'f', 0)
-                .arg(results.upPercent, 0, 'f', 0);
-                
-    qDebug() << QString("Particles measured with spin down: %1 (%2% of final output, %3% of original amount)")
-                .arg(results.downCount)
-                .arg(100.0 * finalDown / remainingParticles, 0, 'f', 0)
-                .arg(results.downPercent, 0, 'f', 0);
-    
+
     emit resultsChanged();
 }
 
 void SternGerlachSimulator::analyzeGrid(const QVariantList& grid, 
-                                      const QString& initialState,
-                                      int particleCount) {
+                                        const QString& initialState,
+                                        int particleCount) {
     qDebug() << "Analyzing grid with particle count:" << particleCount;  // Add debug
     
     if (particleCount <= 0) {

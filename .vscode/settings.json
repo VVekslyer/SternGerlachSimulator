@@ -1,6 +1,15 @@
 {
     "files.associations": {
         "format": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "atomic": "cpp",
+        "ios": "cpp",
+        "system_error": "cpp",
+        "vector": "cpp",
+        "xiosbase": "cpp",
+        "xstring": "cpp",
+        "iosfwd": "cpp",
+        "xlocbuf": "cpp",
+        "xlocale": "cpp"
     }
 }
