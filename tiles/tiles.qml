@@ -1,4 +1,11 @@
-// tiles/tiles.qml
+/*
+ *  Stern-Gerlach Simulator Project
+ *  
+ *  Copyright © 2024 Vitaliy Vekslyer and Robert Truong
+ *
+ *  tiles/tiles.qml
+ */
+
 import QtQuick 2.15
 import SternGerlach 1.0
 

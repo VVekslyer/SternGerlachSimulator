@@ -1,4 +1,11 @@
-// Main.qml
+/*
+ *  Stern-Gerlach Simulator Project
+ *  
+ *  Copyright © 2024 Vitaliy Vekslyer and Robert Truong
+ *
+ *  Main.qml
+ */
+
 import QtQuick
 import QtQuick.Window
 import QtQuick.Controls

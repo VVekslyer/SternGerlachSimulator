@@ -1,4 +1,11 @@
-// tiles/DropTile.qml
+/*
+ *  Stern-Gerlach Simulator Project
+ *  
+ *  Copyright © 2024 Vitaliy Vekslyer and Robert Truong
+ *
+ *  tiles/DropTile.qml
+ */
+
 import QtQuick 2.15
 
 DropArea {

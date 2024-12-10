@@ -1,6 +1,13 @@
-// sterngerlachsimulator.h
-#ifndef STERNGERLACHSIMULATOR_H
-#define STERNGERLACHSIMULATOR_H
+/*
+ *  Stern-Gerlach Simulator Project
+ *  
+ *  Copyright © 2024 Vitaliy Vekslyer and Robert Truong.
+ *
+ *  SternGerlachSimulator.h
+ */
+
+#ifndef SternGerlachSimulator_H
+#define SternGerlachSimulator_H
 
 #include <QObject>
 #include <QVariantMap>

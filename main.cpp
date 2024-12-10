@@ -1,7 +1,14 @@
-// main.cpp
+/*
+ *  Stern-Gerlach Simulator Project
+ *  
+ *  Copyright © 2024 Vitaliy Vekslyer and Robert Truong
+ *
+ *  main.cpp
+ */
+
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include "sterngerlachsimulator.h"
+#include "SternGerlachSimulator.h"
 
 int main(int argc, char *argv[])
 {

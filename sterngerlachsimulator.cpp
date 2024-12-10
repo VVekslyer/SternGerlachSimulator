@@ -1,15 +1,12 @@
 /*
- *  Stern-Gerlach Simulator
+ *  Stern-Gerlach Simulator Project
  *  
- *  Copyright © 2024 Vitaliy Vekslyer and Robert Truong.
+ *  Copyright © 2024 Vitaliy Vekslyer and Robert Truong
  *
- * sterngerlachsimulator.cpp
+ *  SternGerlachSimulator.cpp
  */
 
-// Your C++ code here
-
-// sterngerlachsimulator.cpp
-#include "sterngerlachsimulator.h"
+#include "SternGerlachSimulator.h"
 #include <random>
 #include <cmath>
 

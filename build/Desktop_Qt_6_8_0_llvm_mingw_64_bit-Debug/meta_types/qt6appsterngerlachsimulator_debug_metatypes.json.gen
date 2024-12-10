@@ -3,7 +3,7 @@
         "classes": [
             {
                 "className": "SternGerlachSimulator",
-                "lineNumber": 8,
+                "lineNumber": 15,
                 "methods": [
                     {
                         "access": "public",
@@ -122,7 +122,7 @@
                 ]
             }
         ],
-        "inputFile": "sterngerlachsimulator.h",
+        "inputFile": "SternGerlachSimulator.h",
         "outputRevision": 68
     }
 ]

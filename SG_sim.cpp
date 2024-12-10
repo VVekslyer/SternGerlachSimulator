@@ -1,3 +1,12 @@
+/*
+ *  Stern-Gerlach Simulator Project
+ *  
+ *  Copyright © 2024 Vitaliy Vekslyer and Robert Truong
+ *
+ *  SG_sim.cpp
+ */
+
+// This is our text-based SG simulator for debugging purposes
 #include <iostream>
 #include <random>
 #include <cstdlib>

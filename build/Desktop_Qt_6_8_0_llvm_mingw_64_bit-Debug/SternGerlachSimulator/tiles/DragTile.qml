@@ -1,4 +1,11 @@
-// tiles/DragTile.qml
+/*
+ *  Stern-Gerlach Simulator Project
+ *  
+ *  Copyright © 2024 Vitaliy Vekslyer and Robert Truong
+ *
+ *  tiles/DragTile.qml
+ */
+
 import QtQuick 2.15
 
 Item {

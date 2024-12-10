@@ -24,7 +24,7 @@ qt_add_qml_module(appSternGerlachSimulator
         QML_FILES tiles/ConnectionLine.qml
         QML_FILES tiles/Wall.qml
         QML_FILES tiles/Output.qml
-        SOURCES sterngerlachsimulator.h sterngerlachsimulator.cpp
+        SOURCES SternGerlachSimulator.h SternGerlachSimulator.cpp
         SOURCES
 )
 
