@@ -225,37 +225,73 @@ void SternGerlachSimulator::runSimulation(const QString& initialState,
                                           const QVector<bool>& blockSpinUp,
                                           int particleCount) {
     State state = generateInitialState(initialState);
+    results.particleCount = particleCount;
+    
+    int countUpFinal = 0, countDownFinal = 0;
 
-    if (sgDirections.size() == 2) {
-        int countUpFinal = 0, countDownFinal = 0;
-
-        // Run each particle through both SGs in sequence
+    if (sgDirections.size() == 2) { // 2 SGs
+        // Two SG device case - existing code works correctly
         for (int i = 0; i < particleCount; i++) {
-            // First SG
             State result1 = SG_Measurement(state, sgDirections[0]);
+            bool isSpinUp1 = (result1.theta < PI / 2);
             
-            // Feed result into second SG
-            State result2 = SG_Measurement(result1, sgDirections[1]);
+            State intermediateState = setState(sgDirections[0], isSpinUp1);
+            State result2 = SG_Measurement(intermediateState, sgDirections[1]);
             
-            // Count final outcomes
             if (result2.theta < PI / 2) {
                 countUpFinal++;
             } else {
                 countDownFinal++;
             }
         }
+        results.particleSum = particleCount;
+    } else if (sgDirections.size() == 3) { // 3 SGs
+        // Three SG device case
+        int passedParticles = 0;
+        
+        for (int i = 0; i < particleCount; i++) {
+            // First SG measurement
+            State result1 = SG_Measurement(state, sgDirections[0]);
+            bool isSpinUp1 = (result1.theta < PI / 2);
 
-        // Calculate results
-        results.particleSum = particleCount;  // All particles are measured
-        results.particleCount = particleCount;
-        results.upCount = countUpFinal;
-        results.downCount = countDownFinal;
-        results.throughputPercent = 100.0;
-        results.upPercent = (double)countUpFinal / particleCount * 100.0;
-        results.downPercent = (double)countDownFinal / particleCount * 100.0;
+            // Check if blocked at first filter
+            if (blockSpinUp[0] == isSpinUp1) {
+                continue;
+            }
 
-        emit resultsChanged();
+            // Second SG measurement
+            State intermediateState1 = setState(sgDirections[0], isSpinUp1);
+            State result2 = SG_Measurement(intermediateState1, sgDirections[1]);
+            bool isSpinUp2 = (result2.theta < PI / 2);
+
+            // Check if blocked at second filter
+            if (blockSpinUp[1] == isSpinUp2) {
+                continue;
+            }
+
+            // Final SG measurement
+            State intermediateState2 = setState(sgDirections[1], isSpinUp2);
+            State result3 = SG_Measurement(intermediateState2, sgDirections[2]);
+            
+            // Count only particles that made it through all filters
+            passedParticles++;
+            if (result3.theta < PI / 2) {
+                countUpFinal++;
+            } else {
+                countDownFinal++;
+            }
+        }
+        results.particleSum = passedParticles;
     }
+
+    // Calculate percentages based on original particle count
+    results.upCount = countUpFinal;
+    results.downCount = countDownFinal;
+    results.throughputPercent = (double)results.particleSum / particleCount * 100.0;
+    results.upPercent = (double)countUpFinal / particleCount * 100.0;
+    results.downPercent = (double)countDownFinal / particleCount * 100.0;
+
+    emit resultsChanged();
 }
 
 void SternGerlachSimulator::analyzeGrid(const QVariantList& grid, 
