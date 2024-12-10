@@ -12,5 +12,5 @@ This software was developed using the Qt framework community edition. [Open Sour
 
 ### Qt Framework
 - **Website**: [https://www.qt.io](https://www.qt.io/download-open-source)
-- **License**: LGPL version 3, GPL version 2, and GPL version 3[_{{{CITATION{{{_1{Open Source Development | Open Source License - Qt](https://www.qt.io/download-open-source)
+- **License**: LGPL version 3, GPL version 2, and GPL version 3. [Open Source Development | Open Source License - Qt](https://www.qt.io/download-open-source)
 
