@@ -43,12 +43,12 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
 
+                // Use property binding with static symbols
                 text: {
                     if (!simulator) return "out";
-                    let results = simulator.getResults();
-                    return (results.throughputPercent).toFixed(1) + "%\n" +
-                           "↑:" + (results.upPercent).toFixed(1) + "%\n" +
-                           "↓:" + (results.downPercent).toFixed(1) + "%";
+                    return `${simulator.throughputPercent.toFixed(1)}%\n` +
+                           `↑: ${simulator.upPercent.toFixed(1)}%\n` +
+                           `↓: ${simulator.downPercent.toFixed(1)}%`;
                 }
             }
 

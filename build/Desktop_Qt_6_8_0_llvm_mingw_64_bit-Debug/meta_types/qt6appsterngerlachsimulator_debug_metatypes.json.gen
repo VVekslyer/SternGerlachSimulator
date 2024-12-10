@@ -33,6 +33,78 @@
                     }
                 ],
                 "object": true,
+                "properties": [
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 0,
+                        "name": "particleSum",
+                        "notify": "resultsChanged",
+                        "read": "particleSum",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 1,
+                        "name": "particleCount",
+                        "notify": "resultsChanged",
+                        "read": "particleCount",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 2,
+                        "name": "throughputPercent",
+                        "notify": "resultsChanged",
+                        "read": "throughputPercent",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "double",
+                        "user": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 3,
+                        "name": "upPercent",
+                        "notify": "resultsChanged",
+                        "read": "upPercent",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "double",
+                        "user": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 4,
+                        "name": "downPercent",
+                        "notify": "resultsChanged",
+                        "read": "downPercent",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "double",
+                        "user": false
+                    }
+                ],
                 "qualifiedClassName": "SternGerlachSimulator",
                 "signals": [
                     {
