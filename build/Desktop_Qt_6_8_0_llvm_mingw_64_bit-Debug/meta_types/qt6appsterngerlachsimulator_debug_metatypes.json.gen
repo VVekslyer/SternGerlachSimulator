@@ -3,7 +3,7 @@
         "classes": [
             {
                 "className": "SternGerlachSimulator",
-                "lineNumber": 15,
+                "lineNumber": 22,
                 "methods": [
                     {
                         "access": "public",

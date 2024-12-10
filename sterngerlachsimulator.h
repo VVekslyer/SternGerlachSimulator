@@ -11,6 +11,13 @@
 
 #include <QObject>
 #include <QVariantMap>
+#include <QVector>
+
+// Global State struct
+struct State {
+    double theta;
+    double phi;
+};
 
 class SternGerlachSimulator : public QObject {
     Q_OBJECT
@@ -52,9 +59,15 @@ private:
     };
 
     SimResults results;
+
+    // Function declarations using global State struct
     void runSimulation(const QString& initialState, const QVector<char>& sgDirections,
                        const QVector<bool>& blockSpinUp, int particleCount);
     bool findPattern(const QVariantList& grid, QVector<char>& sgDirections, QVector<bool>& blockSpinUp);
+
+    State generateInitialState(const QString& initialState);
+    State setState(char direction, bool spinUp);
+    State SG_Measurement(const State& input, char direction);
 };
 
 #endif

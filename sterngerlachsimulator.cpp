@@ -12,9 +12,12 @@
 
 const double PI = 3.14159265358979323846;
 
-struct State {
-    double theta, phi;
-};
+// Remove the duplicate State struct definition
+// struct State {
+//     double theta, phi;
+// };
+
+// Now use the global State struct defined in the header
 
 struct SGDevice {
     char type;
@@ -137,7 +140,7 @@ bool SternGerlachSimulator::findPattern(const QVariantList& grid, QVector<char>&
     return false;
 }
 
-State generateInitialState(const QString& initialState) {
+State SternGerlachSimulator::generateInitialState(const QString& initialState) {
     State state{0.0, 0.0};
     
     if (initialState == "+Z") {
@@ -159,7 +162,6 @@ State generateInitialState(const QString& initialState) {
         state.theta = PI/2;
         state.phi = 3*PI/2;
     } else if (initialState.startsWith("custom")) {
-        // Parse custom state format: "custom,theta,phi"
         QStringList parts = initialState.split(',');
         if (parts.size() == 3) {
             state.theta = parts[1].toDouble();
@@ -169,7 +171,7 @@ State generateInitialState(const QString& initialState) {
     return state;
 }
 
-State SG_Measurement(const State& input, char direction) {
+State SternGerlachSimulator::SG_Measurement(const State& input, char direction) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dist(0.0, 1.0);
