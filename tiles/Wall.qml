@@ -45,6 +45,9 @@ Item {
                     verticalCenter: parent.verticalCenter
                     horizontalCenterOffset: 44
                 }
+
+                Drag.hotSpot.x: width/2   // Center horizontally
+                Drag.hotSpot.y: height/2  // Center vertically
             }
 
             // Horizontal rectangle

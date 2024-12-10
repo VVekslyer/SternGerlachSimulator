@@ -1,6 +1,6 @@
 /*
  *  Stern-Gerlach Simulator Project
- *  
+ *
  *  Copyright © 2024 Vitaliy Vekslyer and Robert Truong
  *
  *  SternGerlachSimulator.cpp
@@ -23,19 +23,19 @@ struct SGDevice {
     char type;
     int row;
     int col;
-    
+
     // Add operator== for QList operations
     bool operator==(const SGDevice& other) const {
         return type == other.type && row == other.row && col == other.col;
     }
 };
 
-SternGerlachSimulator::SternGerlachSimulator(QObject *parent) 
+SternGerlachSimulator::SternGerlachSimulator(QObject *parent)
     : QObject(parent) {
     results = SimResults{0, 0, 0, 0, 0.0, 0.0, 0.0};
 }
 
-bool SternGerlachSimulator::findPattern(const QVariantList& grid, QVector<char>& sgDirections, 
+bool SternGerlachSimulator::findPattern(const QVariantList& grid, QVector<char>& sgDirections,
                                         QVector<bool>& blockSpinUp) {
     const int WIDTH = 16; // width and height of the entire grid
     const int HEIGHT = 16;
@@ -143,7 +143,7 @@ bool SternGerlachSimulator::findPattern(const QVariantList& grid, QVector<char>&
 
 State SternGerlachSimulator::generateInitialState(const QString& initialState) {
     State state{0.0, 0.0};
-    
+
     if (initialState == "+Z") {
         state.theta = 0;
         state.phi = 0;
@@ -176,7 +176,7 @@ State SternGerlachSimulator::SG_Measurement(const State& input, char direction) 
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dist(0.0, 1.0);
-    
+
     double probability;
     if (direction == 'Z') {
         probability = std::cos(input.theta/2) * std::cos(input.theta/2);
@@ -226,7 +226,7 @@ void SternGerlachSimulator::runSimulation(const QString& initialState,
                                           int particleCount) {
     State state = generateInitialState(initialState);
     results.particleCount = particleCount;
-    
+
     int countUpFinal = 0, countDownFinal = 0;
 
     if (sgDirections.size() == 2) { // 2 SGs
@@ -234,10 +234,10 @@ void SternGerlachSimulator::runSimulation(const QString& initialState,
         for (int i = 0; i < particleCount; i++) {
             State result1 = SG_Measurement(state, sgDirections[0]);
             bool isSpinUp1 = (result1.theta < PI / 2);
-            
+
             State intermediateState = setState(sgDirections[0], isSpinUp1);
             State result2 = SG_Measurement(intermediateState, sgDirections[1]);
-            
+
             if (result2.theta < PI / 2) {
                 countUpFinal++;
             } else {
@@ -248,7 +248,7 @@ void SternGerlachSimulator::runSimulation(const QString& initialState,
     } else if (sgDirections.size() == 3) { // 3 SGs
         // Three SG device case
         int passedParticles = 0;
-        
+
         for (int i = 0; i < particleCount; i++) {
             // First SG measurement
             State result1 = SG_Measurement(state, sgDirections[0]);
@@ -272,7 +272,7 @@ void SternGerlachSimulator::runSimulation(const QString& initialState,
             // Final SG measurement
             State intermediateState2 = setState(sgDirections[1], isSpinUp2);
             State result3 = SG_Measurement(intermediateState2, sgDirections[2]);
-            
+
             // Count only particles that made it through all filters
             passedParticles++;
             if (result3.theta < PI / 2) {
@@ -294,11 +294,11 @@ void SternGerlachSimulator::runSimulation(const QString& initialState,
     emit resultsChanged();
 }
 
-void SternGerlachSimulator::analyzeGrid(const QVariantList& grid, 
+void SternGerlachSimulator::analyzeGrid(const QVariantList& grid,
                                         const QString& initialState,
                                         int particleCount) {
     qDebug() << "Analyzing grid with particle count:" << particleCount;  // Add debug
-    
+
     if (particleCount <= 0) {
         qDebug() << "Invalid particle count:" << particleCount;
         return;
@@ -306,7 +306,7 @@ void SternGerlachSimulator::analyzeGrid(const QVariantList& grid,
 
     QVector<char> sgDirections;
     QVector<bool> blockSpinUp;
-    
+
     if (findPattern(grid, sgDirections, blockSpinUp)) {
         qDebug() << "Running simulation with:";
         qDebug() << "Initial state:" << initialState;

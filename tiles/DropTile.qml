@@ -8,13 +8,13 @@
 
 import QtQuick 2.15
 
-DropArea {
+DropArea { // Where SG devices and connections are dropped onto
     id: dragTarget
 
     property string colorKey
 
-    width: 44  // Was 58
-    height: 36 // Was 48
+    width: 44
+    height: 36
     keys: colorKey == "any" ? ["red", "blue", "orange", "white", "line", "wall", "output"] : [ colorKey ]
 
     Rectangle {
@@ -22,6 +22,6 @@ DropArea {
 
         anchors.fill: parent
         color: dragTarget.containsDrag ? "grey" : (colorKey == "any" ? "white" : dragTarget.colorKey)
-        opacity: 0 // clear out the grey color
+        opacity: 0.1 // clear out the grey color
     }
 }
