@@ -8,7 +8,7 @@ Made by Vitaliy Vekslyer and Robert Truong
 
 ## Acknowledgments
 
-This software was developed using the Qt framework community edition[_{{{CITATION{{{_1{Open Source Development | Open Source License - Qt](https://www.qt.io/download-open-source).
+This software was developed using the Qt framework community edition. [Open Source Development | Open Source License - Qt](https://www.qt.io/download-open-source).
 
 ### Qt Framework
 - **Website**: [https://www.qt.io](https://www.qt.io/download-open-source)
