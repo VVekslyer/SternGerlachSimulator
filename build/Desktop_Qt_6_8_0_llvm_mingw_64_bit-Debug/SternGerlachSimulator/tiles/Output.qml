@@ -6,12 +6,15 @@ Item {
 
     required property string text
     required property int modelData
+    required property var simulator
 
     width: 72/2
     height: 72/2
 
-    // Reference simulator from root
-    property var simulator: Window.window ? Window.window.simulator : null
+    // Initialize default values
+    readonly property real throughput: simulator?.results?.throughputPercent ?? 0.0
+    readonly property real upPercentage: simulator?.results?.upPercent ?? 0.0
+    readonly property real downPercentage: simulator?.results?.downPercent ?? 0.0
 
     MouseArea {
         id: mouseArea
@@ -66,6 +69,39 @@ Item {
                         horizontalCenter: undefined
                     }
                 }
+            }
+        }
+    }
+
+    Rectangle {
+        x: parent.width - 5
+        y: -5
+        width: resultColumn.width + 10
+        height: resultColumn.height + 6
+        color: "#333333"
+        radius: 3
+        opacity: 0.8
+
+        Column {
+            id: resultColumn
+            x: 5
+            y: 3
+            spacing: 1
+
+            Text {
+                text: "∑ " + throughput.toFixed(1) + "%"
+                color: "white"
+                font.pixelSize: 10
+            }
+            Text {
+                text: "↑ " + upPercentage.toFixed(1) + "%"
+                color: "white"
+                font.pixelSize: 10
+            }
+            Text {
+                text: "↓ " + downPercentage.toFixed(1) + "%"
+                color: "white"
+                font.pixelSize: 10
             }
         }
     }

@@ -25,7 +25,7 @@ Rectangle {
     // Add counter for unique IDs
     property int nextId: 0
 
-    // Add locked property to grid cells
+    // Add locked property to grid cells 
     property var gridArray: {
         let arr = [];
         for (let i = 0; i < 16; i++) {  // Changed from 12 to 16
